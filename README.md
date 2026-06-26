@@ -110,10 +110,10 @@ XiaoShui Pretty PPT 可以帮助 Coding Agent：
 - 在动手前判断 PPT 的使用场景、受众、内容密度和模板方向。
 - 判断内容更适合哪一种 PPT 模板。
 - 把长文档拆成 cover、agenda、chapter、data、process、comparison、image、summary、closing 等演示页。
-- 生成可以直接打开的静态 HTML 网页 PPT。
+- 生成可以直接打开的静态 HTML 网页 PPT，内置浏览器编辑模式。
 - 保留每套模板自己的配色、字体层级、版式节奏和交互动效。
 - 根据内容长度决定应该做成几页，而不是把所有内容硬塞进一屏。
-- 可选开启浏览器编辑模式：按 `E` 直接改页面文字，保存到本机，或导出修改后的 HTML。
+- 默认内置浏览器编辑模式：按 `E` 直接改任何文字、替换图片/视频、插入新图片，保存到本机或导出修改后的 HTML。
 
 ## What Makes It Different
 
@@ -122,7 +122,7 @@ XiaoShui Pretty PPT 的独特之处：
 - **模板驱动**：不是从零生成代码，而是从 12 套精心设计的视觉模板出发，保持每组配色、字体层级和交互动画的一致性。
 - **先判断再动手**：在使用前会先了解场景、受众、内容密度和素材情况，再推荐最合适的模板方向。
 - **渐进式交付**：清晰的工作流 — 判断模式 → 内容摄入 → 选择模板 → 规划页面 → 复制模板 → 填充内容 → 质量验收 → 交付。
-- **可编辑交付物**：生成的 HTML PPT 可按 `E` 进入浏览器编辑模式，直接在页面上改文字，保存到本地或导出独立 HTML 文件。
+- **可编辑交付物**：生成的 HTML PPT 默认内置编辑工具栏，按 `E` 即可编辑所有文字、替换图片/视频、插入新图片，按 `Cmd+S` 保存，点「导出 HTML」下载独立文件。
 - **内容压缩**：不是把文档逐段贴进页面，而是将素材分类为"必须展示/可口头说明/可省略/需要可视化"再规划页面。
 
 ## Before Creating A PPT
@@ -168,27 +168,27 @@ XiaoShui Pretty PPT 的独特之处：
 把这份产品介绍做成商务汇报型网页 PPT。
 ```
 
-复制模板到本地输出目录：
+复制模板到本地输出目录（默认内置编辑工具栏）：
 
 ```bash
 python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force
 open /tmp/shui-cobalt-demo/index.html
 ```
 
-复制并开启可编辑模式：
+生成不带编辑工具栏的纯净版：
 
 ```bash
-python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --editable
+python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --no-edit
 open /tmp/shui-cobalt-demo/index.html
 ```
 
-给已有 HTML PPT 注入可编辑模式：
+给已有 HTML PPT 注入编辑模式：
 
 ```bash
 python3 skills/xiaoshui-pretty-ppt/scripts/inject_edit_mode.py /tmp/shui-cobalt-demo/index.html
 ```
 
-打开后按 `E` 进入编辑模式，直接点文字修改；按 `Cmd+S` / `Ctrl+S` 保存；点 `导出 HTML` 下载修改后的文件。图片替换、增删页面、版式调整仍建议通过 Agent 修改源码。
+打开后右上角会出现编辑工具栏：按 `E` 进入编辑模式，直接点任何文字即可修改；点图片/视频上的「替换图片」「替换视频」可换 URL 或上传本地文件；点「➕ 插入图片」可以往页面里新增图片；按 `Cmd+S` / `Ctrl+S` 保存到本机；点「导出 HTML」下载修改后的独立文件；点「重置」清除本地修改恢复模板内容。
 
 验证输出：
 

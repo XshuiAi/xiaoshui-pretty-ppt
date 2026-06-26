@@ -1,78 +1,71 @@
 # Editable Delivery
 
-Use this reference when the user asks how a generated HTML web PPT can be revised after the first generation, or when the deck is meant for client handoff, video recording, workshops, or repeated polishing.
+Use this reference when the user asks how a generated HTML web PPT can be revised after generation, or when the deck is meant for client handoff, video recording, workshops, or repeated polishing.
 
-## What Editable Mode Solves
+## Default Behavior
 
-Generated HTML PPT is valuable because it can be opened and presented immediately. The weak point is that non-technical users may still want to change wording after generation. XiaoShui Pretty PPT handles this with a lightweight browser edit layer:
+**Browser edit mode is injected by default** into every generated deck. The floating toolbar appears at the top-right corner of the page. No extra flag is needed.
 
-- Press `E` to enter or exit edit mode.
-- Click text directly to revise headings, paragraphs, list items, table cells, captions, and elements marked with `data-editable`.
-- Press `Cmd+S` / `Ctrl+S`, or click `保存`, to save edits to the current browser.
-- Click `导出 HTML` to download a standalone edited HTML file.
-- Click `重置` to clear local saved edits.
-
-This does not replace agent-based structural editing. It is for fast wording changes and presentation rehearsal.
-
-## When To Enable It
-
-Enable edit mode by default when:
-
-- the user says the deck will be shared with others for review
-- the user wants to record a demo showing "生成后还能改"
-- the user wants to polish wording during rehearsal
-- the deck is a client-facing, course, self-media, or workshop artifact
-- the source is a Feishu doc and the user expects document-like editability
-
-Do not enable it by default when:
-
-- the deck is a locked keynote-style presentation
-- the deck will be embedded somewhere where a toolbar would distract
-- the user wants a clean public landing page with no editing affordance
-
-## How To Add It
-
-When copying a template:
+To generate a clean locked deck without the toolbar, use `--no-edit`:
 
 ```bash
-python3 scripts/copy_template.py <style-slug> /absolute/output/dir --force --editable
+python3 scripts/copy_template.py <style-slug> /output/dir --force --no-edit
 ```
 
-For an existing generated deck:
+## What You Can Edit In Browser
 
-```bash
-python3 scripts/inject_edit_mode.py /absolute/output/dir/index.html
-```
+| Feature | How | Details |
+|---------|-----|---------|
+| **All text** | Press `E`, click any text | Titles, subtitles, paragraphs, labels, captions, list items, table cells, badges — every visible text element is editable. |
+| **Replace images** | Press `E`, click `替换图片` badge on any image | Paste a new URL or upload a local image file. Supports data-URL conversion for offline-safe exports. |
+| **Replace videos** | Press `E`, click `替换视频` badge on any video | Paste a new video URL. |
+| **Insert images** | Press `E`, click `➕ 插入图片` in toolbar | Inserts a new `<img>` at cursor position or at the end of the current slide. Supports URL paste or local file upload. |
 
-## What Can Be Edited In Browser
+## Toolbar Reference
 
-Good browser-edit targets:
+| Button | Action |
+|--------|--------|
+| `编辑` / `退出编辑` | Toggle edit mode (or press `E`) |
+| `保存` | Save all edits to browser localStorage (or `Cmd+S` / `Ctrl+S`) |
+| `导出 HTML` | Download a standalone edited HTML file with all changes baked in |
+| `重置` | Clear all local edits and restore original template content |
+| `➕ 插入图片` | Open a modal to insert a new image (URL or local file upload) |
 
-- titles and subtitles
-- paragraphs and bullets
-- table cells
-- captions
-- labels explicitly marked with `data-editable`
+## Keyboard Shortcuts
 
-Keep these non-editable:
+| Key | Action |
+|-----|--------|
+| `E` | Toggle edit mode on/off (when not focused on an input) |
+| `Cmd+S` / `Ctrl+S` | Save all changes (when edit mode is active) |
+| `Esc` | Exit edit mode |
 
-- navigation controls
-- buttons
-- images and videos
-- SVG diagrams and canvas visuals
-- script/style code
-- complex layout containers
+## How It Works
 
-If the user needs to replace an image, remove a video, add a new page, change the interaction model, or redesign a section, treat it as an agent edit to the HTML source instead of a browser edit.
+1. Text edits are stored in `localStorage` keyed by page path + element ID.
+2. Image/video src changes are saved in the same storage.
+3. `导出 HTML` downloads a complete copy with all edits inlined — no localStorage dependency.
+4. `重置` clears only the localStorage entries for this specific page.
+5. Edits survive page reloads but are per-browser (not synced across devices).
+
+## When To Skip Edit Mode
+
+Use `--no-edit` when:
+
+- The deck is a locked keynote that should never show editing UI
+- The deck will be embedded in an iframe where a toolbar would distract
+- The user explicitly asks for a clean, viewer-only page
 
 ## Suggested User-Facing Explanation
 
-Use this wording when delivering an editable deck:
-
 ```text
-这份 HTML PPT 已开启可编辑模式。打开页面后按 E 进入编辑模式，直接点文字就能改；按 Cmd+S / Ctrl+S 保存到本机浏览器；点“导出 HTML”可以下载一份带修改内容的新 HTML 文件。图片、视频、版式结构如果要改，继续用对话告诉 Agent 改哪一页。
+这份 HTML PPT 已开启可编辑模式。右上角工具栏说明：
+
+- 按 E 进入编辑模式 → 直接点任何文字就能改
+- 编辑模式下点图片/视频上的「替换图片」「替换视频」→ 可以换 URL 或上传本地文件
+- 点工具栏「➕ 插入图片」→ 可以在页面里新增图片
+- Cmd+S / Ctrl+S 保存到本机浏览器
+- 点「导出 HTML」下载一份独立的新 HTML 文件
+- 点「重置」清除所有修改，恢复原始模板
+
+图片、视频、版式结构如果要大改，也可以继续用对话告诉 Agent。
 ```
-
-## Demo Tips
-
-For demonstrations, show the complete workflow: drop in a document, generate the deck, press `E` to edit text live, save with `Cmd+S`, and export the edited HTML. The key message: this is not a frozen export — it stays editable and maintains visual quality after generation.

@@ -150,7 +150,9 @@ Use the density rules in `references/intake-and-density.md`:
 
 ### Step 4 · Copy The Template
 
-Start from the template instead of hand-building a new PPT shell:
+Start from the template instead of hand-building a new PPT shell.
+
+Browser edit mode is **injected by default** — every generated deck gets the edit toolbar (press `E`, edit text, replace images/videos, export HTML).
 
 ```bash
 python3 scripts/copy_template.py <style-slug> /absolute/output/dir
@@ -163,10 +165,10 @@ python3 scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --f
 open /tmp/shui-cobalt-demo/index.html
 ```
 
-If the user needs to make quick text edits after generation, copy with edit mode:
+If the output should be a locked, clean presentation with no toolbar:
 
 ```bash
-python3 scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --editable
+python3 scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --no-edit
 ```
 
 Valid slugs:
@@ -198,7 +200,7 @@ Follow these rules:
 - Convert long prose into presentation pages: cover, agenda, chapter, key point, data, process, comparison, example, summary, closing.
 - Images and videos should live next to `index.html` under a local `assets/` or `images/` folder unless the template already defines another path.
 - Do not reuse borrowed web images unless the user owns them, provides them, or explicitly approves the source.
-- For client handoff, public sharing, or repeated polishing, use `references/editable-delivery.md` and include browser edit mode unless it would distract from a locked presentation.
+- Every generated deck includes the browser edit toolbar by default. The user can edit all text, replace images/videos, and insert new images directly in the browser. Use `--no-edit` only when the deck must be a locked presentation.
 
 ### Step 6 · Verify
 
@@ -233,7 +235,7 @@ Return:
 - local deck path
 - selected template name
 - what content was transformed
-- whether browser edit mode is included and how to use it
+- confirmed that the edit toolbar is present (press `E` to edit text, click images/videos to replace, click `➕ 插入图片` to add images)
 - any assets that still need the user's replacement
 - any verification command results
 

@@ -16,9 +16,9 @@ def main() -> int:
     parser.add_argument("output_dir", help="Directory to create or overwrite")
     parser.add_argument("--force", action="store_true", help="Overwrite output_dir if it exists")
     parser.add_argument(
-        "--editable",
+        "--no-edit",
         action="store_true",
-        help="Inject browser edit mode into the copied deck.",
+        help="Skip browser edit mode (it is injected by default).",
     )
     args = parser.parse_args()
 
@@ -35,7 +35,7 @@ def main() -> int:
         shutil.rmtree(target)
 
     shutil.copytree(source, target)
-    if args.editable:
+    if not args.no_edit:
         inject_edit_mode(target / "index.html")
     print(target)
     return 0

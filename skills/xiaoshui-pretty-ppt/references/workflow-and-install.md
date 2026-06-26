@@ -78,10 +78,17 @@ open /tmp/shui-cobalt-demo/index.html
 
 ## Create An Editable Deck
 
-Use this when the user needs to revise wording after generation, hand the deck to a client, or record a video showing that the result is not frozen.
+Browser edit mode is injected **by default** into every generated deck — no extra flag needed. The output includes a floating toolbar (edit, save, export, reset, insert image).
 
 ```bash
-python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --editable
+python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force
+open /tmp/shui-cobalt-demo/index.html
+```
+
+To generate a clean locked deck without the editing toolbar, use `--no-edit`:
+
+```bash
+python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --no-edit
 open /tmp/shui-cobalt-demo/index.html
 ```
 
@@ -93,11 +100,14 @@ python3 skills/xiaoshui-pretty-ppt/scripts/inject_edit_mode.py /tmp/shui-cobalt-
 
 Keyboard and toolbar behavior:
 
-- Press `E` to enter or exit edit mode.
-- Click text directly to edit it.
+- Press `E` to enter or exit edit mode. All text elements become editable.
+- Click any text directly to edit it.
+- In edit mode, click the `替换图片` / `替换视频` badge on any image/video to replace its source (URL or local file upload).
+- Click `➕ 插入图片` in the toolbar to insert a new image into the current page.
 - Press `Cmd+S` / `Ctrl+S`, or click `保存`, to save changes to browser localStorage.
 - Click `导出 HTML` to download a standalone edited HTML file.
-- Click `重置` to clear local browser edits.
+- Click `重置` to clear local browser edits and restore original template content.
+- Press `Esc` to exit edit mode.
 
 ## Prompt Examples
 
