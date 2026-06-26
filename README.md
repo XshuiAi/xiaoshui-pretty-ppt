@@ -107,11 +107,67 @@
 Shui Pretty PPT 可以帮助 Coding Agent：
 
 - 读取用户提供的文字、Markdown、飞书文档内容、图片、截图、视频素材。
+- 在动手前判断 PPT 的使用场景、受众、内容密度和模板方向。
 - 判断内容更适合哪一种 PPT 模板。
 - 把长文档拆成 cover、agenda、chapter、data、process、comparison、image、summary、closing 等演示页。
 - 生成可以直接打开的静态 HTML 网页 PPT。
 - 保留每套模板自己的配色、字体层级、版式节奏和交互动效。
 - 根据内容长度决定应该做成几页，而不是把所有内容硬塞进一屏。
+
+## How This Skill Is Written
+
+这个 skill 参考了两类成熟写法：
+
+- 归藏 PPT skill 的强项：先澄清场景、受众、素材、截图、主题，再复制模板并严格验收。
+- frontend-slides 的强项：先判断模式和内容密度，用清晰的阶段流程生成、验证、分享和导出。
+
+Shui Pretty PPT 采用同样的思路，但保持自己的模板库结构：
+
+```text
+skills/shui-pretty-ppt/
+├── SKILL.md                         # skill 入口和主工作流
+├── agents/openai.yaml               # Codex 展示信息
+├── references/
+│   ├── intake-and-density.md        # 使用前提问、内容密度、文档压缩
+│   ├── ppt-template-catalog.md      # 12 个模板的分类和选择
+│   ├── quality-checklist.md         # 交付前验收
+│   ├── workflow-and-install.md      # 安装、更新、发布说明
+│   ├── style-index.md
+│   └── *.md                         # 每套模板的详细风格说明
+├── scripts/
+│   ├── copy_template.py             # 复制模板
+│   └── validate_deck.py             # 基础可用性检查
+└── assets/templates/<style-slug>/    # 每套模板的可运行 index.html
+```
+
+核心原则是：`SKILL.md` 保持短而清楚；长规则放进 `references/`；重复动作放进 `scripts/`；每次生成 PPT 都从一个真实可运行的模板复制开始。
+
+## Before Creating A PPT
+
+如果用户只给一个主题，skill 会先判断几个维度：
+
+| 维度 | 要判断什么 |
+|---|---|
+| 使用场景 | 现场演讲、对外分享、内部汇报、产品路演、课程教程、作品集展示 |
+| 受众 | 领导、同事、客户、学生、公开观众、专业评审 |
+| 内容密度 | 少字演讲型、图文均衡型、高密度报告型、教程走查型 |
+| 素材状态 | 完整文档、粗略笔记、只有主题、截图/图片/旧 PPT 是否齐全 |
+| 模板方向 | 自媒体/个人展示/作品集，还是行政政务/职场汇报/产品演讲 |
+
+默认只问 3 个关键问题：
+
+1. 这个 PPT 给谁看、用在什么场景？
+2. 内容要少一点适合演讲，还是多一点适合阅读/汇报？
+3. 你有文档、截图、图片、数据或旧 PPT 吗？
+
+内容密度默认分四档：
+
+| 密度 | 适合 | 页面规则 |
+|---|---|---|
+| Speaker Deck | 现场演讲、分享会、发布 | 一页一个观点，少字，强视觉 |
+| Share Deck | 既演讲也发给别人看 | 3-5 个要点，图文均衡 |
+| Report Deck | 行政、政务、职场、研究 | 可放表格/卡片/KPI，但必须分组，不堆长段落 |
+| Tutorial / Portfolio | 教程、案例、作品集 | 以步骤、截图、案例前后对比为主 |
 
 ## How To Use
 
@@ -136,7 +192,35 @@ python3 skills/shui-pretty-ppt/scripts/copy_template.py cobalt-executive-deck /t
 open /tmp/shui-cobalt-demo/index.html
 ```
 
+验证输出：
+
+```bash
+python3 skills/shui-pretty-ppt/scripts/validate_deck.py /tmp/shui-cobalt-demo
+```
+
 ## Install
+
+### Install from GitHub
+
+推荐使用 `skills` CLI：
+
+```bash
+npx -y skills@latest add XshuiAi/shui-pretty-ppt \
+  --skill shui-pretty-ppt \
+  --agent codex \
+  --global
+```
+
+如果希望复制文件而不是软链接：
+
+```bash
+npx -y skills@latest add XshuiAi/shui-pretty-ppt \
+  --skill shui-pretty-ppt \
+  --agent codex \
+  --global \
+  --copy \
+  -y
+```
 
 ### Manual install for Codex
 
@@ -149,15 +233,13 @@ cp -R skills/shui-pretty-ppt ~/.codex/skills/shui-pretty-ppt
 
 然后重启 Codex，让新 skill 生效。
 
-### Install from GitHub
+### Verify Install
 
-公开仓库后，可使用 `skills` CLI 安装：
+检查是否安装成功：
 
 ```bash
-npx -y skills@latest add XshuiAi/shui-pretty-ppt \
-  --skill shui-pretty-ppt \
-  --agent codex \
-  --global
+npx -y skills@latest list --global --agent codex --json
+test -f ~/.agents/skills/shui-pretty-ppt/SKILL.md
 ```
 
 ## Repository Structure
@@ -172,10 +254,15 @@ shui-pretty-ppt/
         ├── SKILL.md
         ├── agents/openai.yaml
         ├── references/
+        │   ├── intake-and-density.md
         │   ├── ppt-template-catalog.md
+        │   ├── quality-checklist.md
+        │   ├── workflow-and-install.md
         │   ├── style-index.md
         │   └── *.md              # detailed style specs
-        ├── scripts/copy_template.py
+        ├── scripts/
+        │   ├── copy_template.py
+        │   └── validate_deck.py
         └── assets/templates/      # reusable HTML PPT template sources
 ```
 
@@ -184,7 +271,9 @@ shui-pretty-ppt/
 这个 skill 使用 progressive disclosure 的结构：
 
 - `SKILL.md` 只保留核心工作流和风格选择规则。
+- `references/intake-and-density.md` 负责用户使用前的提问、内容密度和文档压缩。
 - `references/ppt-template-catalog.md` 负责模板分类和选择。
+- `references/quality-checklist.md` 负责交付前验收。
 - 每个模板的详细设计规范放在 `references/`。
 - 可复用 HTML 源文件放在 `assets/templates/`。
 - 复制模板使用脚本完成，避免每次都让模型从零重写。

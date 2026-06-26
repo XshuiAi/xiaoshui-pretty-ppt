@@ -26,11 +26,22 @@ The skill contains twelve templates:
 
 This is not a generic webpage generator. It turns source material into a **presentation experience**:
 
-1. Pick a template by scenario and visual language.
-2. Copy the template instead of writing the PPT from scratch.
-3. Convert the user's content into cover, agenda, chapter, data, image, comparison, process, summary, and closing pages.
-4. Preserve the chosen template's color system, typography, navigation, interaction model, and motion rules.
-5. Verify the resulting deck visually and structurally before delivery.
+1. Detect whether the user needs a speaker deck, reading deck, report deck, product pitch, portfolio, or tutorial deck.
+2. Ask a compact intake when the brief is vague: audience, use scene, content density, source material, assets, and style direction.
+3. Pick a template by scenario and visual language.
+4. Copy the template instead of writing the PPT from scratch.
+5. Convert the user's content into cover, agenda, chapter, data, image, comparison, process, summary, and closing pages.
+6. Preserve the chosen template's color system, typography, navigation, interaction model, and motion rules.
+7. Verify the resulting deck visually and structurally before delivery.
+
+## What This Skill Is Not
+
+- Not a free-form landing page generator.
+- Not a normal long article renderer.
+- Not a PowerPoint binary exporter.
+- Not a place to cram every paragraph from the source document into slides.
+
+If the source is long, convert it into a presentation structure first. Decide what must be shown on slides, what should become speaker notes, and what should be omitted or moved to an appendix-like section.
 
 ## Template Modules
 
@@ -60,21 +71,42 @@ Use this module when the user needs a more practical deck for administrative wor
 
 ## Workflow
 
-### Step 1 · Intake
+### Step 0 · Detect Mode
+
+Before asking questions, detect the user's mode:
+
+- **Mode A · New Deck**: user gives a topic, notes, outline, or source document and wants a new HTML web PPT.
+- **Mode B · Document To Deck**: user gives a long document, Feishu doc, report, article, or Markdown and wants it transformed.
+- **Mode C · Existing Deck Enhancement**: user gives an existing generated `index.html` or folder and wants improvements.
+- **Mode D · Template Exploration**: user wants to see available templates, compare styles, or choose a direction.
+- **Mode E · Install / Use / Update**: user asks how to install, write, publish, or update the skill.
+
+For Mode D, summarize `references/ppt-template-catalog.md` and recommend 2-3 candidates. For Mode E, read `references/workflow-and-install.md`.
+
+### Step 1 · Intake And Density
 
 If the user already provides a clear outline, source material, and preferred style, start directly.
 
-If the user only gives a topic or rough idea, ask at most three high-impact questions:
+If the user only gives a topic or rough idea, read `references/intake-and-density.md`, then ask at most three high-impact questions:
 
-1. Who is the audience and sharing scene?
-2. Which module is closer: creator/personal showcase or practical report/workplace presentation?
-3. Do they have images, screenshots, charts, old slides, or Feishu/Markdown source material?
+1. What is the deck for and who will watch it?
+2. Should it be low-density speaker slides, balanced share slides, or higher-density report slides?
+3. Which module is closer: creator/personal showcase or practical report/workplace presentation?
 
 Use reasonable assumptions when missing details do not block progress.
+
+When the user provides a full document, do not paste it slide-by-slide. First classify content into:
+
+- **Must show**: ideas, numbers, diagrams, screenshots, quotes that belong on slides.
+- **Can say**: supporting explanation that belongs in speaker notes or presenter narration.
+- **Can omit**: background details that would overload the deck.
+- **Need visual**: process, comparison, timeline, system, chart, screenshot, or case evidence that needs a visual layout.
 
 ### Step 2 · Pick A Template
 
 Open `references/ppt-template-catalog.md`, then choose one template by scenario. If the user names a template, use it.
+
+If the user is unsure, recommend 2-3 templates with reasons instead of listing all 12. Let the user choose only when style preference is materially unclear.
 
 Detailed style references:
 
@@ -93,7 +125,27 @@ Detailed style references:
 
 Read the chosen reference before editing the deck.
 
-### Step 3 · Copy The Template
+### Step 3 · Plan The Deck
+
+Before editing `index.html`, write a short build plan in your working notes:
+
+- deck purpose
+- audience
+- density level
+- selected template
+- estimated page count
+- source material used
+- image/screenshot assets
+- page map: page number -> slide role -> source content -> asset slot
+
+Use the density rules in `references/intake-and-density.md`:
+
+- speaker deck: one idea per slide, sparse text
+- share deck: balanced text, still presentation-first
+- report deck: denser cards/tables, but no overflow and no scroll inside a slide-like page
+- portfolio/tutorial: more visual walkthrough, image-led where possible
+
+### Step 4 · Copy The Template
 
 Start from the template instead of hand-building a new PPT shell:
 
@@ -125,7 +177,7 @@ blue-growth-deck
 garden-pop-landing
 ```
 
-### Step 4 · Build The Deck
+### Step 5 · Build The Deck
 
 Replace the template content with the user's actual content.
 
@@ -138,9 +190,9 @@ Follow these rules:
 - Images and videos should live next to `index.html` under a local `assets/` or `images/` folder unless the template already defines another path.
 - Do not reuse borrowed web images unless the user owns them, provides them, or explicitly approves the source.
 
-### Step 5 · Verify
+### Step 6 · Verify
 
-Before delivery, check:
+Before delivery, read `references/quality-checklist.md` and check:
 
 - `index.html` exists in the copied output.
 - No missing local image/video references.
@@ -155,9 +207,10 @@ Useful commands:
 ```bash
 rg "\\[必填\\]|TODO|Lorem|placeholder" /absolute/output/dir
 python3 scripts/copy_template.py <style-slug> /tmp/<style-slug>-test --force
+python3 scripts/validate_deck.py /absolute/output/dir
 ```
 
-### Step 6 · Delivery
+### Step 7 · Delivery
 
 Return:
 
@@ -167,7 +220,7 @@ Return:
 - any assets that still need the user's replacement
 - any verification command results
 
-If publishing, package only the final static deck directory and required assets.
+If publishing, package only the final static deck directory and required assets. If the user asks for install/update instructions, use `references/workflow-and-install.md`.
 
 ## Naming Rule
 
@@ -199,3 +252,14 @@ When a new PPT result should become a reusable template:
 6. Open the copied `index.html` and verify it visually.
 
 Keep each template distinct. Do not let all styles collapse into the same pastel/card look.
+
+## Supporting Files
+
+| File | Purpose | When To Read |
+|---|---|---|
+| `references/intake-and-density.md` | intake questions, document-to-deck compression, density rules | before planning a deck |
+| `references/ppt-template-catalog.md` | 12-template catalog and scenario mapping | before choosing a template |
+| `references/workflow-and-install.md` | how the skill is written, installed, updated, and published | install/use/update questions |
+| `references/quality-checklist.md` | final QA checklist | before delivery |
+| `scripts/copy_template.py` | copy one template into an output folder | every deck build |
+| `scripts/validate_deck.py` | basic static validation for generated deck folders | before delivery |
