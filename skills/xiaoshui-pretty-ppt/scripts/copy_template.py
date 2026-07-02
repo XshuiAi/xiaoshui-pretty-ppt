@@ -8,6 +8,7 @@ import shutil
 from pathlib import Path
 
 from inject_edit_mode import inject_edit_mode
+from inject_presenter_mode import inject_presenter_mode
 
 
 def main() -> int:
@@ -19,6 +20,11 @@ def main() -> int:
         "--no-edit",
         action="store_true",
         help="Skip browser edit mode (it is injected by default).",
+    )
+    parser.add_argument(
+        "--presenter",
+        action="store_true",
+        help="Inject presenter mode with speaker notes and next-slide preview.",
     )
     args = parser.parse_args()
 
@@ -37,6 +43,8 @@ def main() -> int:
     shutil.copytree(source, target)
     if not args.no_edit:
         inject_edit_mode(target / "index.html")
+    if args.presenter:
+        inject_presenter_mode(target / "index.html")
     print(target)
     return 0
 

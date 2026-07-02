@@ -2,6 +2,22 @@
 
 This file explains how XiaoShui Pretty PPT is installed, updated, and validated.
 
+## Repository Pieces
+
+```text
+skills/xiaoshui-pretty-ppt/
+├── SKILL.md
+├── references/
+├── scripts/
+│   ├── copy_template.py
+│   ├── inject_edit_mode.py
+│   ├── inject_presenter_mode.py
+│   └── validate_deck.py
+├── runtime/
+│   └── presenter-mode.js
+└── assets/templates/<style-slug>/index.html
+```
+
 ## Install From GitHub
 
 Recommended:
@@ -109,6 +125,34 @@ Keyboard and toolbar behavior:
 - Click `重置` to clear local browser edits and restore original template content.
 - Press `Esc` to exit edit mode.
 
+## Create A Presenter-Ready Deck
+
+Use this when the deck will be used for a talk, workshop, public demo, product walkthrough, or course recording.
+
+```bash
+python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py blush-editorial /tmp/shui-blush-demo --force --presenter
+open /tmp/shui-blush-demo/index.html
+```
+
+For an existing deck:
+
+```bash
+python3 skills/xiaoshui-pretty-ppt/scripts/inject_presenter_mode.py /tmp/shui-blush-demo/index.html
+```
+
+Presenter mode content rules:
+
+- Put long explanations in `<aside class="speaker-notes">...</aside>` inside the relevant slide or section.
+- Keep visible slides concise; use notes for what the speaker should say.
+- Add clear headings, because presenter mode reads `h1`, `h2`, or `h3` as the current slide title.
+- Add a short visible paragraph or `[data-slide-summary]` when a slide needs a specific presenter summary.
+
+User-facing explanation:
+
+```text
+这份 HTML PPT 已开启演讲者模式。打开页面后按 P，可以看到当前页摘要、下一页标题、讲稿备注和计时器；按方向键切换页面，按 Esc 退出。长解释我放在讲稿备注里，不会挤在页面上。
+```
+
 ## Prompt Examples
 
 Use automatic selection:
@@ -137,4 +181,11 @@ Editable handoff:
 ```text
 使用 $xiaoshui-pretty-ppt，把这份飞书文档做成可直接演示的 HTML 网页 PPT。
 请开启可编辑模式，这样我录视频时可以展示直接修改页面文字和导出 HTML。
+```
+
+Presenter-ready handoff:
+
+```text
+使用 $xiaoshui-pretty-ppt，把这份文章做成适合公开分享的 HTML 网页 PPT。
+请开启演讲者模式，把长解释放进讲稿备注，页面上只保留适合观众看的重点。
 ```

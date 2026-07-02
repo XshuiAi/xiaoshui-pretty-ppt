@@ -1,10 +1,40 @@
 # XiaoShui Pretty PPT
 
-一套面向 Codex / Claude Code 等 Coding Agent 的可复用 **HTML 网页 PPT 技能**。
+把飞书文档、文章、笔记、教程、汇报和作品集，变成可以直接打开、演示、编辑和发布的 **HTML 网页 PPT**。
 
-它的目标不是生成普通网页，而是把笔记、文档、教程、复盘、汇报、演讲提纲和飞书文档内容，转成可以直接打开、展示、分享或部署的高完成度网页 PPT。
+这不是普通网页模板，也不是图片式 AI PPT。它的重点是把内容变成一套可继续迭代的 presentation workflow：
 
-当前内置 12 套视觉模板，分为两个模块：
+- 中文文字清晰，不是放大就糊的截图。
+- 生成后仍可按 `E` 进入浏览器编辑模式，直接改文字并导出 HTML。
+- 可按 `P` 打开演讲者模式，查看讲稿备注、下一页预览和计时器。
+- 12 套模板按场景选择，适合自媒体、个人展示、作品集、行政政务、职场汇报和产品演讲。
+- 交付物是静态 HTML 文件夹，可以本地打开，也可以部署到 GitHub Pages、Cloudflare Workers 或任意静态托管。
+
+## Demo
+
+推荐先看粉白时尚风的动态介绍页：
+
+[docs/demo/blush-skill-intro/index.html](docs/demo/blush-skill-intro/index.html)
+
+打开后可以试两个快捷键：
+
+- `P`：演讲者模式，显示讲稿备注、下一页预览、计时器。
+- `E`：如果生成时开启 editable mode，可以直接编辑页面文字。
+
+## Why HTML Web PPT
+
+很多 AI PPT 工具能生成漂亮画面，但真实使用时会遇到几个问题：
+
+- 生成结果偏图片，中文容易糊，文字难以修改。
+- 模板效果不稳定，每次像抽卡。
+- 文档、PPT、网页和分享链接是割裂的，内容改动后要反复重排。
+- 很多工具只解决“做出一页”，没有解决“拿去演示、复盘、发布、二次修改”。
+
+xiaoshui-Pretty PPT 的做法是：先把文档拆成演示结构，再用真实 HTML 模板生成一套可以打开、演讲、编辑、发布的网页 PPT。
+
+## Template Modules
+
+当前内置 12 套视觉模板，分为两个模块。
 
 ## Module A · 自媒体 / 个人展示 / 作品集
 
@@ -28,7 +58,7 @@
 - **Sapphire Defense Deck / 宝蓝答辩稿**：论文答辩、学术汇报、研究总结、正式项目复盘。
 - **Vermilion Civic Deck / 红色汇报稿**：政务工作、行政汇报、党建材料、公共服务项目总结。
 
-## Preview
+## Preview Gallery
 
 ### 01. Pastel Blockfolio / 粉彩拼贴志
 
@@ -114,6 +144,7 @@ XiaoShui Pretty PPT 可以帮助 Coding Agent：
 - 保留每套模板自己的配色、字体层级、版式节奏和交互动效。
 - 根据内容长度决定应该做成几页，而不是把所有内容硬塞进一屏。
 - 默认内置浏览器编辑模式：按 `E` 直接改任何文字、替换图片/视频、插入新图片，保存到本机或导出修改后的 HTML。
+- 可选开启演讲者模式：按 `P` 查看讲稿备注、下一页预览、计时器。
 
 ## What Makes It Different
 
@@ -123,6 +154,7 @@ XiaoShui Pretty PPT 的独特之处：
 - **先判断再动手**：在使用前会先了解场景、受众、内容密度和素材情况，再推荐最合适的模板方向。
 - **渐进式交付**：清晰的工作流 — 判断模式 → 内容摄入 → 选择模板 → 规划页面 → 复制模板 → 填充内容 → 质量验收 → 交付。
 - **可编辑交付物**：生成的 HTML PPT 默认内置编辑工具栏，按 `E` 即可编辑所有文字、替换图片/视频、插入新图片，按 `Cmd+S` 保存，点「导出 HTML」下载独立文件。
+- **演讲者模式**：按 `P` 可以打开讲稿备注、下一页预览和计时器，适合录课、分享会和产品演示。
 - **内容压缩**：不是把文档逐段贴进页面，而是将素材分类为"必须展示/可口头说明/可省略/需要可视化"再规划页面。
 
 ## Before Creating A PPT
@@ -159,6 +191,7 @@ XiaoShui Pretty PPT 的独特之处：
 ```text
 使用 $xiaoshui-pretty-ppt，把这份文档做成一个适合晚上分享的 HTML 网页 PPT。
 请根据内容自动选择最合适的模板。
+请开启可编辑模式和演讲者模式。
 ```
 
 指定模板：
@@ -166,6 +199,19 @@ XiaoShui Pretty PPT 的独特之处：
 ```text
 使用 $xiaoshui-pretty-ppt 的 Cobalt Executive Deck / 钴蓝商策，
 把这份产品介绍做成商务汇报型网页 PPT。
+请开启可编辑模式。
+```
+
+从飞书文档生成适合对外分享的网页 PPT：
+
+```text
+使用 $xiaoshui-pretty-ppt，把这个飞书文档做成一份适合对外分享的 HTML 网页 PPT。
+要求：
+1. 先判断内容更适合哪一套模板；
+2. 把长文档拆成封面、钩子、核心观点、案例、流程、总结；
+3. 开启可编辑模式，方便我录视频时展示生成后还能改；
+4. 开启演讲者模式，把长解释放进讲稿备注；
+5. 最后告诉我本地 HTML 路径和如何打开。
 ```
 
 复制模板到本地输出目录（默认内置编辑工具栏）：
@@ -182,13 +228,28 @@ python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py cobalt-executive-dec
 open /tmp/shui-cobalt-demo/index.html
 ```
 
+复制并开启演讲者模式：
+
+```bash
+python3 skills/xiaoshui-pretty-ppt/scripts/copy_template.py blush-editorial /tmp/shui-blush-demo --force --presenter
+open /tmp/shui-blush-demo/index.html
+```
+
 给已有 HTML PPT 注入编辑模式：
 
 ```bash
 python3 skills/xiaoshui-pretty-ppt/scripts/inject_edit_mode.py /tmp/shui-cobalt-demo/index.html
 ```
 
+给已有 HTML PPT 注入演讲者模式：
+
+```bash
+python3 skills/xiaoshui-pretty-ppt/scripts/inject_presenter_mode.py /tmp/shui-blush-demo/index.html
+```
+
 打开后右上角会出现编辑工具栏：按 `E` 进入编辑模式，直接点任何文字即可修改；点图片/视频上的「替换图片」「替换视频」可换 URL 或上传本地文件；点「➕ 插入图片」可以往页面里新增图片；按 `Cmd+S` / `Ctrl+S` 保存到本机；点「导出 HTML」下载修改后的独立文件；点「重置」清除本地修改恢复模板内容。
+
+打开后按 `P` 进入演讲者模式，可看到当前页摘要、下一页标题、讲稿备注和计时器；按 `Esc` 退出。
 
 验证输出：
 
@@ -247,6 +308,8 @@ xiaoshui-pretty-ppt/
 ├── README.md
 ├── assets/
 │   └── previews/                    # README preview images
+├── docs/
+│   └── demo/blush-skill-intro/      # 粉白时尚风动态技能介绍页
 └── skills/
     └── xiaoshui-pretty-ppt/         # Codex skill source
         ├── SKILL.md
@@ -262,7 +325,10 @@ xiaoshui-pretty-ppt/
         ├── scripts/
         │   ├── copy_template.py
         │   ├── inject_edit_mode.py
+        │   ├── inject_presenter_mode.py
         │   └── validate_deck.py
+        ├── runtime/
+        │   └── presenter-mode.js
         └── assets/templates/        # reusable HTML PPT template sources
 ```
 
@@ -271,3 +337,22 @@ xiaoshui-pretty-ppt/
 - 每个模板都是独立可运行的完整 HTML 页面，复制即用，不需要从零开始生成。
 - 模板之间有明确的视觉差异，确保每套 PPT 风格都有自己的辨识度。
 - 所有生成逻辑都基于真实的模板源文件，保证产出质量稳定。
+- `SKILL.md` 只保留核心工作流和风格选择规则。
+- `references/intake-and-density.md` 负责用户使用前的提问、内容密度和文档压缩。
+- `references/ppt-template-catalog.md` 负责模板分类和选择。
+- `references/quality-checklist.md` 负责交付前验收。
+- 每个模板的详细设计规范放在 `references/`。
+- 可复用 HTML 源文件放在 `assets/templates/`。
+- 演示增强能力放在 `runtime/`，当前包含演讲者模式。
+- 复制模板使用脚本完成，避免每次都让模型从零重写。
+
+## Roadmap
+
+当前优先把 HTML 网页 PPT 这个形态做深，再考虑拆出真正的 PPT 文件或飞书画板技能。
+
+- **Presenter Mode**：已加入基础版，支持讲稿备注、下一页预览、计时器。
+- **Nested Slides**：后续增加横向主线 + 纵向详情，适合课程、长报告和产品说明。
+- **Auto Animate**：后续增加跨页元素过渡，让重点卡片、数据和截图在页面之间自然移动。
+- **Data Report Deck**：加强数据汇报模板，支持 KPI、趋势、漏斗、对比、结论页。
+- **Cinematic Portfolio Deck**：增加电影播放感作品集模板，用全屏镜头、章节字幕和滚动叙事做高级展示。
+- **Mobile / Vertical Deck**：为自媒体场景补充横屏、竖屏和手机浏览适配策略。

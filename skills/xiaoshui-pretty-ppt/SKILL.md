@@ -33,7 +33,8 @@ This is not a generic webpage generator. It turns source material into a **prese
 5. Convert the user's content into cover, agenda, chapter, data, image, comparison, process, summary, and closing pages.
 6. Preserve the chosen template's color system, typography, navigation, interaction model, and motion rules.
 7. Decide whether the deck should include browser edit mode, so the user can directly revise text after generation.
-8. Verify the resulting deck visually and structurally before delivery.
+8. Decide whether the deck should include presenter mode, so the user can rehearse with speaker notes, next-slide preview, and a timer.
+9. Verify the resulting deck visually and structurally before delivery.
 
 ## What This Skill Is Not
 
@@ -83,8 +84,9 @@ Before asking questions, detect the user's mode:
 - **Mode D · Template Exploration**: user wants to see available templates, compare styles, or choose a direction.
 - **Mode E · Install / Use / Update**: user asks how to install, write, publish, or update the skill.
 - **Mode F · Editable Delivery**: user asks how to keep modifying the generated HTML PPT, edit text boxes, export an edited file, or make the result easier to hand off.
+- **Mode G · Presenter Delivery**: user asks for speaker notes, presenter view, next-slide preview, rehearsal, or a talk-ready deck.
 
-For Mode D, summarize `references/ppt-template-catalog.md` and recommend 2-3 candidates. For Mode E, read `references/workflow-and-install.md`. For Mode F, read `references/editable-delivery.md`.
+For Mode D, summarize `references/ppt-template-catalog.md` and recommend 2-3 candidates. For Mode E, read `references/workflow-and-install.md`. For Mode F, read `references/editable-delivery.md`. For Mode G, use the presenter mode rules in this file and `references/workflow-and-install.md`.
 
 ### Step 1 · Intake And Density
 
@@ -171,6 +173,18 @@ If the output should be a locked, clean presentation with no toolbar:
 python3 scripts/copy_template.py cobalt-executive-deck /tmp/shui-cobalt-demo --force --no-edit
 ```
 
+If the user needs a talk-ready deck with notes and next-slide preview, copy with presenter mode:
+
+```bash
+python3 scripts/copy_template.py blush-editorial /tmp/shui-blush-demo --force --presenter
+```
+
+Default edit mode and presenter mode can be combined:
+
+```bash
+python3 scripts/copy_template.py blush-editorial /tmp/shui-blush-demo --force --presenter
+```
+
 Valid slugs:
 
 ```text
@@ -201,6 +215,16 @@ Follow these rules:
 - Images and videos should live next to `index.html` under a local `assets/` or `images/` folder unless the template already defines another path.
 - Do not reuse borrowed web images unless the user owns them, provides them, or explicitly approves the source.
 - Every generated deck includes the browser edit toolbar by default. The user can edit all text, replace images/videos, and insert new images directly in the browser. Use `--no-edit` only when the deck must be a locked presentation.
+- For talks, workshops, course recordings, or public demos, include speaker notes in `.speaker-notes` or `[data-speaker-notes]` blocks and inject presenter mode.
+
+Presenter mode conventions:
+
+- Press `P` to open or close presenter mode.
+- Press `Esc` to close it.
+- Use arrow keys or PageUp/PageDown while presenter mode is open.
+- Add concise notes to each major slide using `<aside class="speaker-notes">...</aside>`.
+- Keep speaker notes out of the visible slide body. Long explanations belong in notes, not on the slide.
+- The runtime automatically shows current title, current summary, next slide title, notes, slide count, and timer.
 
 ### Step 6 · Verify
 
@@ -228,6 +252,12 @@ For editable decks:
 python3 scripts/inject_edit_mode.py /absolute/output/dir/index.html
 ```
 
+For presenter-ready decks:
+
+```bash
+python3 scripts/inject_presenter_mode.py /absolute/output/dir/index.html
+```
+
 ### Step 7 · Delivery
 
 Return:
@@ -236,6 +266,7 @@ Return:
 - selected template name
 - what content was transformed
 - confirmed that the edit toolbar is present (press `E` to edit text, click images/videos to replace, click `➕ 插入图片` to add images)
+- whether presenter mode is included and how to use it
 - any assets that still need the user's replacement
 - any verification command results
 
@@ -268,4 +299,6 @@ Keep each template distinct. Do not let all styles collapse into the same pastel
 | `references/quality-checklist.md` | final QA checklist | before delivery |
 | `scripts/copy_template.py` | copy one template into an output folder | every deck build |
 | `scripts/inject_edit_mode.py` | add edit toolbar to an existing HTML deck | when editable delivery is needed |
+| `scripts/inject_presenter_mode.py` | add presenter mode to an existing HTML deck | when speaker notes or rehearsal view is needed |
+| `runtime/presenter-mode.js` | browser runtime for notes, next-slide preview, and timer | injected by `--presenter` |
 | `scripts/validate_deck.py` | basic static validation for generated deck folders | before delivery |
